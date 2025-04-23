@@ -1,6 +1,7 @@
 import {
   applyMiddleware,
   combineReducers,
+  compose,
   legacy_createStore as createStore,
 } from 'redux';
 import { appReducer } from './reducers/appReducer';
@@ -19,7 +20,13 @@ export function configureStore() {
     app: appReducer,
   });
 
-  const store = createStore(rootReducer, applyMiddleware(epicMiddleware));
+  const composeEnhancers =
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+  const store = createStore(
+    rootReducer,
+    composeEnhancers(applyMiddleware(epicMiddleware))
+  );
 
   epicMiddleware.run(rootEpic);
 
